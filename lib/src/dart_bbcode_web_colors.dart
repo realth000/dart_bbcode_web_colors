@@ -5,6 +5,8 @@ import 'dart:ui';
 
 /// Extension to convert nullable string to [Color].
 extension StringToColorExt on String? {
+  static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
+
   /// Parse nullable color string to [Color].
   ///
   /// * If `this` is null, return null.
