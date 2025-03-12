@@ -1,0 +1,13 @@
+name: dart_bbcode_web_colors
+description: Pre-defined web colors for color recognizing when parsing bbcode.
+version: 1.0.0
+repository: https://github.com/realth000/dart_bbcode_web_colors
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+
+dev_dependencies:
+  lints: ^5.0.0
