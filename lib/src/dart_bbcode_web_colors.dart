@@ -16,12 +16,26 @@ extension StringToColorExt on String? {
     if (this != null && _colorRe.hasMatch(this!)) {
       if (this!.startsWith('#')) {
         if (this!.length == 4) {
-          // #abc format short hand for #aabbcc.
+          // #abc, RGB format short hand for #aabbcc.
           colorValue = int.tryParse(
-            '${this![1]}${this![1]}${this![2]}'
-            '${this![2]}${this![3]}${this![3]}',
+            '${this![1]}${this![1]}' // R
+            '${this![2]}${this![2]}' // G
+            '${this![3]}${this![3]}', // B
             radix: 16,
           );
+        } else if (this!.length == 5) {
+          // Drop support for ARGB or RGBA format since we do not know the exact format.
+          // // #fabc, ARGB format short hand for #aabbccff.
+          // // Here we do not know the content is ARGB (dart) or RGBA (css, or call it web).
+          // // For compatibility reasons, we all assume ARGB format.
+          // colorValue = int.tryParse(
+          //   '${this![0]}${this![0]}' // A
+          //   '${this![1]}${this![1]}' // R
+          //   '${this![2]}${this![2]}' // G
+          //   '${this![3]}${this![3]}', // B
+          //   radix: 16,
+          // );
+          return null;
         } else {
           // Normal #aabbcc format.
           colorValue = int.tryParse(this!.substring(1), radix: 16);
@@ -31,7 +45,11 @@ extension StringToColorExt on String? {
       }
     }
     if (colorValue != null) {
-      colorValue += 0xFF000000;
+      // Only append if do not have alpha channel.
+      // This is required by dart side when parsing color.
+      if (colorValue < 0x01000000) {
+        colorValue += 0xFF000000;
+      }
       return colorValue;
     } else {
       // If color not in format #aabcc, try parse as color name.
@@ -43,7 +61,6 @@ extension StringToColorExt on String? {
     return null;
   }
 }
-
 
 enum WebColors {
   aliceBlue(0xFFF0F8FF),
